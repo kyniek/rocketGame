@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gameRocket"
+version = "1.0.0"
+description = "Educational game for learning Python"
+requires-python = ">=3.10"
+dependencies = [
+    "arcade>=2.6.0",
+]
+
+[project.scripts]
+gameRocket = "gameRocket.main:main"

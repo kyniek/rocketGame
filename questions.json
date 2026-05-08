@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What is 2 + 2?",
+    "answerA": "4",
+    "answerB": "3",
+    "answerC": "5"
+  },
+  {
+    "question": "What color is the sky on a clear day?",
+    "answerA": "blue",
+    "answerB": "",
+    "answerC": ""
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "answerA": "Mars",
+    "answerB": "Venus",
+    "answerC": "Jupiter"
+  },
+  {
+    "question": "How many legs does a spider have?",
+    "answerA": "8",
+    "answerB": "6",
+    "answerC": "4"
+  },
+  {
+    "question": "What is the capital of France?",
+    "answerA": "Paris",
+    "answerB": "",
+    "answerC": ""
+  },
+  {
+    "question": "Which animal is the largest mammal?",
+    "answerA": "Blue whale",
+    "answerB": "Elephant",
+    "answerC": "Giraffe"
+  },
+  {
+    "question": "What is 10 - 3?",
+    "answerA": "7",
+    "answerB": "5",
+    "answerC": "13"
+  },
+  {
+    "question": "Which gas do plants absorb from the air?",
+    "answerA": "Carbon dioxide",
+    "answerB": "Oxygen",
+    "answerC": "Nitrogen"
+  },
+  {
+    "question": "What is the freezing point of water?",
+    "answerA": "0 degrees Celsius",
+    "answerB": "100 degrees Celsius",
+    "answerC": "32 degrees Celsius"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "answerA": "Leonardo da Vinci",
+    "answerB": "Pablo Picasso",
+    "answerC": "Vincent van Gogh"
+  }
+]
