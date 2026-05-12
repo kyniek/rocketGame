@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gameRocket</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <h1>GAME ROCKET</h1>
+    <p>Educational Rocket Game</p>
+    <div id="instructions">
+      <p>Use ARROW KEYS to control the rocket:</p>
+      <p>  UP/DOWN - Change row</p>
+      <p>  RIGHT - Move forward</p>
+      <p>Avoid RED obstacles (lose life on collision)</p>
+      <p>Answer questions (20% chance on forward move)</p>
+      <p>  Correct: +10 points</p>
+      <p>  Wrong: -1 life</p>
+      <p>Answer ALL questions correctly to WIN!</p>
+    </div>
+    <button id="start-btn">START GAME</button>
+  </div>
+
+  <!-- Game Screen (canvas is always visible behind screens) -->
+
+  <!-- Challenge Modal -->
+  <div id="challenge-modal" class="hidden">
+    <div id="challenge-content">
+      <h2 id="challenge-question"></h2>
+      <div id="challenge-options"></div>
+      <input type="text" id="challenge-input" class="hidden" placeholder="Type your answer...">
+    </div>
+  </div>
+
+  <!-- Victory Screen -->
+  <div id="victory-screen" class="hidden">
+    <h1>VICTORY!</h1>
+    <p id="victory-score"></p>
+    <div id="victory-missed"></div>
+    <button id="victory-restart-btn">NEW GAME</button>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div id="gameover-screen" class="hidden">
+    <h1>GAME OVER</h1>
+    <p id="gameover-score"></p>
+    <button id="gameover-restart-btn">RESTART</button>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/challenge.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
