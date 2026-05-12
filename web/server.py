@@ -27,6 +27,10 @@ class AnswerRequest(BaseModel):
     answer: str
 
 
+class UpdateRotationRequest(BaseModel):
+    dt: float
+
+
 # ── Game state (singleton per server) ────────────────────────────
 
 # Use a mutable container so we can reassign without `global`
@@ -122,21 +126,36 @@ async def move_game(req: MoveRequest):
 @app.post("/api/game/answer")
 async def answer_game(req: AnswerRequest):
     eng = _engine_state["engine"]
+    # Check if answer was correct before calling answer_challenge
+    current_challenge = eng.current_challenge
+    is_correct = False
+    if current_challenge:
+        is_correct = current_challenge.check_answer(req.answer)
+
     eng.answer_challenge(req.answer)
     state = eng.get_state()
-    result = "correct" if state["score"] > 0 else "wrong"
-    # Determine result from challenge state
+
+    # Determine result
+    result = "correct" if is_correct else "wrong"
     if state["game_over"]:
         result = "game_over"
     elif state["victory"]:
         result = "victory"
-    return {"state": state, "result": result}
+
+    return {"state": state, "result": result, "is_correct": is_correct}
 
 
 @app.post("/api/game/reset")
 async def reset_game():
     _engine_state["engine"] = GameEngine("questions.json")
     return {"state": _engine_state["engine"].get_state()}
+
+
+@app.post("/api/game/update_rotation")
+async def update_rotation(req: UpdateRotationRequest):
+    eng = _engine_state["engine"]
+    eng.update_obstacle_rotation(req.dt)
+    return {"state": eng.get_state()}
 
 
 @app.get("/api/game/state")

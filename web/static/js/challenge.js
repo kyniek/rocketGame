@@ -1,12 +1,12 @@
 class ChallengeModal {
   constructor(container, onSubmit) {
-    // Feedback duration: 750ms
     this.container = container;
     this.onSubmit = onSubmit;
     this.questionEl = document.getElementById('challenge-question');
     this.optionsEl = document.getElementById('challenge-options');
     this.inputEl = document.getElementById('challenge-input');
     this.feedbackEl = null;
+    this.buttons = [];
   }
 
   show(challenge) {
@@ -14,6 +14,7 @@ class ChallengeModal {
     this.questionEl.textContent = challenge.question;
     this.optionsEl.innerHTML = '';
     this.inputEl.value = '';
+    this.buttons = [];
 
     if (challenge.type === 'multiple_choice' && challenge.options) {
       this._renderMultipleChoice(challenge);
@@ -22,20 +23,33 @@ class ChallengeModal {
     }
   }
 
-  hide() {
-    this.container.classList.add('hidden');
-    this.optionsEl.innerHTML = '';
-    this.inputEl.value = '';
+  setInputEnabled(enabled) {
+    // Disable buttons during submission
+    this.buttons.forEach(btn => {
+      btn.disabled = !enabled;
+      btn.style.opacity = enabled ? 1 : 0.5;
+    });
+    if (this.inputEl) {
+      this.inputEl.disabled = !enabled;
+    }
+  }
+
+  showFeedback(isCorrect) {
+    this.questionEl.style.color = isCorrect ? '#00ff00' : '#ff4444';
+    this.questionEl.textContent = isCorrect ? 'CORRECT!' : 'WRONG!';
+    this.questionEl.style.fontSize = '36px';
   }
 
   _renderMultipleChoice(challenge) {
     const options = challenge.options || [];
+    this.buttons = [];
     options.forEach((opt, i) => {
       const btn = document.createElement('button');
       btn.className = 'challenge-option-btn';
       btn.textContent = `${i + 1}. ${opt}`;
       btn.addEventListener('click', () => this.onSubmit(opt));
       this.optionsEl.appendChild(btn);
+      this.buttons.push(btn);
     });
 
     // Keyboard shortcuts 1/2/3
@@ -72,6 +86,10 @@ class ChallengeModal {
     this.optionsEl.innerHTML = '';
     this.inputEl.value = '';
     this.inputEl.classList.add('hidden');
+
+    // Reset styling
+    this.questionEl.style.color = '';
+    this.questionEl.style.fontSize = '';
 
     if (this._keyHandler) {
       document.removeEventListener('keydown', this._keyHandler);

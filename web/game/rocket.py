@@ -62,14 +62,14 @@ class Rocket:
         return False
 
     def move_up(self) -> None:
-        """Increase row by 1, capped at MAX_ROW."""
-        if self.row < GameConstants.MAX_ROW:
-            self.row += 1
-
-    def move_down(self) -> None:
         """Decrease row by 1, capped at MIN_ROW."""
         if self.row > GameConstants.MIN_ROW:
             self.row -= 1
+
+    def move_down(self) -> None:
+        """Increase row by 1, capped at MAX_ROW."""
+        if self.row < GameConstants.MAX_ROW:
+            self.row += 1
 
     def move_forward(self) -> int:
         """Return the next column without modifying state."""

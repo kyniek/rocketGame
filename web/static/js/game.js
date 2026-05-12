@@ -25,7 +25,9 @@ class Game {
 
   reset() {
     this.running = false;
-    this.api.disconnect();
+    this.api.sendReset().then((data) => {
+      this.onStateUpdate(data.state);
+    });
     document.getElementById('start-screen').classList.remove('hidden');
     document.getElementById('victory-screen').classList.add('hidden');
     document.getElementById('gameover-screen').classList.add('hidden');
@@ -37,13 +39,34 @@ class Game {
     if (this.state.challenge_active) return;
     if (this.state.game_over || this.state.victory) return;
 
-    this.api.sendMove(direction);
+    this.api.sendMove(direction).then((data) => {
+      this.onStateUpdate(data.state);
+      if (data.challenge) {
+        this.onChallenge(data.challenge);
+      }
+    });
   }
 
   handleAnswer(answer) {
     if (!this.running) return;
-    this.challengeModal.hide();
-    this.api.sendAnswer(answer);
+
+    // Disable further input while waiting for response
+    this.challengeModal.setInputEnabled(false);
+
+    this.api.sendAnswer(answer).then((data) => {
+      // Show feedback based on result
+      if (data.is_correct) {
+        this.challengeModal.showFeedback(true);
+      } else {
+        this.challengeModal.showFeedback(false);
+      }
+
+      // Close modal and update state after brief feedback
+      setTimeout(() => {
+        this.challengeModal.hide();
+        this.onStateUpdate(data.state);
+      }, 800);
+    });
   }
 
   onStateUpdate(state) {
@@ -108,6 +131,18 @@ class Game {
     const now = performance.now();
     const dt = (now - this.lastTime) / 1000;
     this.lastTime = now;
+
+    // Update obstacle rotation locally (purely visual)
+    if (this.state && this.state.obstacle_rotation) {
+      for (const key in this.state.obstacle_rotation) {
+        const rot = this.state.obstacle_rotation[key];
+        if (rot.active && rot.speed > 0) {
+          rot.angle = (rot.angle + rot.speed * rot.dir * dt) % 360;
+          rot.speed = Math.max(0, rot.speed - 0.5 * dt);
+          if (rot.speed <= 0) rot.active = false;
+        }
+      }
+    }
 
     this.renderer.render(this.state);
 

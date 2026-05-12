@@ -18,77 +18,42 @@ class GameAPI {
   }
 
   async startGame() {
-    return this._request('POST', '/api/game/start');
+    return this._request('POST', '/game/start');
   }
 
   async move(direction) {
-    return this._request('POST', '/api/game/move', { direction });
+    return this._request('POST', '/game/move', { direction });
   }
 
   async answer(answer) {
-    return this._request('POST', '/api/game/answer', { answer });
+    return this._request('POST', '/game/answer', { answer });
   }
 
   async resetGame() {
-    return this._request('POST', '/api/game/reset');
+    return this._request('POST', '/game/reset');
   }
 
   async getState() {
-    return this._request('GET', '/api/game/state');
+    return this._request('GET', '/game/state');
   }
 
-  connect(onStateUpdate, onChallenge, onGameOver, onVictory) {
-    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    this.ws = new WebSocket(`${protocol}//${location.host}/ws`);
-
-    this.ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      switch (data.type) {
-        case 'state':
-          onStateUpdate(data.state);
-          break;
-        case 'challenge':
-          onChallenge(data.challenge);
-          break;
-        case 'game_over':
-          onGameOver(data.state, data.score);
-          break;
-        case 'victory':
-          onVictory(data.state, data.score, data.wrong_answers);
-          break;
-      }
-    };
-
-    this.ws.onclose = () => {
-      this.wsReconnectTimer = setTimeout(() => this.connect(onStateUpdate, onChallenge, onGameOver, onVictory), 2000);
-    };
+  async updateRotation(dt) {
+    return this._request('POST', '/game/update_rotation', { dt });
   }
 
-  sendMove(direction) {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({ type: 'move', direction }));
-    }
+  async sendMove(direction) {
+    return this._request('POST', '/game/move', { direction });
   }
 
-  sendAnswer(answer) {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({ type: 'answer', answer }));
-    }
+  async sendAnswer(answer) {
+    return this._request('POST', '/game/answer', { answer });
   }
 
-  sendReset() {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({ type: 'reset' }));
-    }
+  async sendReset() {
+    return this._request('POST', '/game/reset');
   }
 
   disconnect() {
-    if (this.wsReconnectTimer) {
-      clearTimeout(this.wsReconnectTimer);
-    }
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
+    // No-op for REST-only mode
   }
 }
