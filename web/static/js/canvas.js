@@ -56,7 +56,7 @@ class CanvasRenderer {
     }
   }
 
-  drawGrid(ctx, grid, fogDiscovered) {
+  drawGrid(ctx, grid, fogDiscovered, obstacleRotation) {
     const cols = grid.length;
     const rows = cols > 0 ? grid[0].length : 0;
 
